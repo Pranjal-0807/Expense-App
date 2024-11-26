@@ -1,38 +1,22 @@
-import React, { useState, useEffect } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import React from "react";
+import ExpenseForm from "./pages/ExpenseForm";
+import ExpenseTable from "./pages/ExpenseTable";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import NavBar from "./components/NavBar";
-import ExpenseFormPage from "./pages/ExpenseFormPage";
-import ExpenseTablePage from "./pages/ExpenseTablePage";
+import { useState } from "react";
 
 const App = () => {
-  const [expenses, setExpenses] = useState([]);
-
-  // Load expenses from localStorage on mount
-  useEffect(() => {
-    const storedExpenses = JSON.parse(localStorage.getItem("expenses")) || [];
-    setExpenses(storedExpenses);
-  }, []);
-
+  const [expenses, setExpenses] = useState(
+    JSON.parse(localStorage.getItem("expense")) || []
+  );
+  const [editIndex, setEditIndex] = useState(-1);
   return (
     <BrowserRouter>
       <NavBar />
-      <main className="container mx-auto mt-8 p-4">
-        <Routes>
-          {/* Define Routes */}
-          <Route
-            path="/"
-            element={
-              <ExpenseFormPage expenses={expenses} setExpenses={setExpenses} />
-            }
-          />
-          <Route
-            path="/expenses"
-            element={
-              <ExpenseTablePage expenses={expenses} setExpenses={setExpenses} />
-            }
-          />
-        </Routes>
-      </main>
+      <Routes>
+        <Route path="/" element={<ExpenseForm setExpenses={setExpenses} editIndex={editIndex} />} />
+        <Route path="/table" element={<ExpenseTable expenses = {expenses} setExpenses={setExpenses} setEditIndex={setEditIndex} />} />
+      </Routes>
     </BrowserRouter>
   );
 };
